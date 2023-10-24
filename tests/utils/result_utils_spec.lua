@@ -20,7 +20,15 @@ describe("create_intermediate_results xUnit", function()
           test_name = "XUnitSamples.ParameterizedTests.Test1(value: 1)",
         },
         {
-          error_info = "Assert.True() Failure\nExpected: True\nActual:   False\nat XUnitSamples.ParameterizedTests.Test1(Int32 value) in /home/issafalcon/repos/learning-dotnet/UnitTesting/XUnitSamples/ParameterizedTests.cs:line 13",
+          error_message = "Assert.True() Failure\nExpected: True\nActual:   False",
+          stack_trace = {
+            {
+              line = 13,
+              filename = "/home/issafalcon/repos/learning-dotnet/UnitTesting/XUnitSamples/ParameterizedTests.cs",
+              module = "XUnitSamples.ParameterizedTests.Test1(Int32 value)",
+              text = "at XUnitSamples.ParameterizedTests.Test1(Int32 value) in /home/issafalcon/repos/learning-dotnet/UnitTesting/XUnitSamples/ParameterizedTests.cs:line 13",
+            },
+          },
           raw_output = "failed",
           status = "failed",
           test_name = "XUnitSamples.ParameterizedTests.Test1(value: 3)",
@@ -43,7 +51,15 @@ describe("create_intermediate_results xUnit", function()
   it("should create correct intermediate results from simple ClassData tests", function()
     local expected_results = {
       {
-        error_info = "Assert.True() Failure\nExpected: True\nActual:   False\nat XUnitSamples.ClassDataTests.Theory_With_Class_Data_Test(Int32 v1, Int32 v2) in /home/issafalcon/repos/learning-dotnet/UnitTesting/XUnitSamples/ClassDataTests.cs:line 14",
+        error_message = "Assert.True() Failure\nExpected: True\nActual:   False",
+        stack_trace = {
+          {
+            line = 14,
+            filename = "/home/issafalcon/repos/learning-dotnet/UnitTesting/XUnitSamples/ClassDataTests.cs",
+            module = "XUnitSamples.ClassDataTests.Theory_With_Class_Data_Test(Int32 v1, Int32 v2)",
+            text = "at XUnitSamples.ClassDataTests.Theory_With_Class_Data_Test(Int32 v1, Int32 v2) in /home/issafalcon/repos/learning-dotnet/UnitTesting/XUnitSamples/ClassDataTests.cs:line 14",
+          },
+        },
         raw_output = "failed",
         status = "failed",
         test_name = "XUnitSamples.ClassDataTests.Theory_With_Class_Data_Test(v1: -2, v2: 2)",
@@ -54,7 +70,15 @@ describe("create_intermediate_results xUnit", function()
         test_name = "XUnitSamples.ClassDataTests.Theory_With_Class_Data_Test(v1: 1, v2: 2)",
       },
       {
-        error_info = "Assert.True() Failure\nExpected: True\nActual:   False\nat XUnitSamples.ClassDataTests.Theory_With_Class_Data_Test(Int32 v1, Int32 v2) in /home/issafalcon/repos/learning-dotnet/UnitTesting/XUnitSamples/ClassDataTests.cs:line 14",
+        error_message = "Assert.True() Failure\nExpected: True\nActual:   False",
+        stack_trace = {
+          {
+            line = 14,
+            filename = "/home/issafalcon/repos/learning-dotnet/UnitTesting/XUnitSamples/ClassDataTests.cs",
+            module = "XUnitSamples.ClassDataTests.Theory_With_Class_Data_Test(Int32 v1, Int32 v2)",
+            text = "at XUnitSamples.ClassDataTests.Theory_With_Class_Data_Test(Int32 v1, Int32 v2) in /home/issafalcon/repos/learning-dotnet/UnitTesting/XUnitSamples/ClassDataTests.cs:line 14",
+          },
+        },
         raw_output = "failed",
         status = "failed",
         test_name = "XUnitSamples.ClassDataTests.Theory_With_Class_Data_Test(v1: -4, v2: 6)",
@@ -98,7 +122,14 @@ describe("convert_intermediate_results xUnit", function()
         ["/home/issafalcon/repos/learning-dotnet/UnitTesting/XUnitSamples/ParameterizedTests.cs::XUnitSamples::ParameterizedTests::Test1(value: 3)"] = {
           errors = {
             {
-              message = "XUnitSamples.ParameterizedTests.Test1(value: 3): Assert.True() Failure\nExpected: True\nActual:   False\nat XUnitSamples.ParameterizedTests.Test1(Int32 value) in /home/issafalcon/repos/learning-dotnet/UnitTesting/XUnitSamples/ParameterizedTests.cs:line 13",
+              message = "XUnitSamples.ParameterizedTests.Test1(value: 3): Assert.True() Failure\nExpected: True\nActual:   False",
+              stack_trace = {
+                {
+                  line = 13,
+                  filename = "/home/issafalcon/repos/learning-dotnet/UnitTesting/XUnitSamples/ParameterizedTests.cs",
+                  text = "at XUnitSamples.ParameterizedTests.Test1(Int32 value) in /home/issafalcon/repos/learning-dotnet/UnitTesting/XUnitSamples/ParameterizedTests.cs:line 13",
+                },
+              },
             },
           },
           short = "XUnitSamples.ParameterizedTests.Test1(value: 3):failed",
@@ -128,10 +159,24 @@ describe("convert_intermediate_results xUnit", function()
       ["/home/issafalcon/repos/learning-dotnet/UnitTesting/XUnitSamples/ClassDataTests.cs::XUnitSamples::ClassDataTests::Theory_With_Class_Data_Test"] = {
         errors = {
           {
-            message = "XUnitSamples.ClassDataTests.Theory_With_Class_Data_Test(v1: -2, v2: 2): Assert.True() Failure\nExpected: True\nActual:   False\nat XUnitSamples.ClassDataTests.Theory_With_Class_Data_Test(Int32 v1, Int32 v2) in /home/issafalcon/repos/learning-dotnet/UnitTesting/XUnitSamples/ClassDataTests.cs:line 14",
+            message = "XUnitSamples.ClassDataTests.Theory_With_Class_Data_Test(v1: -2, v2: 2): Assert.True() Failure\nExpected: True\nActual:   False",
+            stack_trace = {
+              {
+                line = 14,
+                filename = "/home/issafalcon/repos/learning-dotnet/UnitTesting/XUnitSamples/ClassDataTests.cs",
+                text = "at XUnitSamples.ClassDataTests.Theory_With_Class_Data_Test(Int32 v1, Int32 v2) in /home/issafalcon/repos/learning-dotnet/UnitTesting/XUnitSamples/ClassDataTests.cs:line 14",
+              },
+            },
           },
           {
-            message = "XUnitSamples.ClassDataTests.Theory_With_Class_Data_Test(v1: -4, v2: 6): Assert.True() Failure\nExpected: True\nActual:   False\nat XUnitSamples.ClassDataTests.Theory_With_Class_Data_Test(Int32 v1, Int32 v2) in /home/issafalcon/repos/learning-dotnet/UnitTesting/XUnitSamples/ClassDataTests.cs:line 14",
+            message = "XUnitSamples.ClassDataTests.Theory_With_Class_Data_Test(v1: -4, v2: 6): Assert.True() Failure\nExpected: True\nActual:   False",
+            stack_trace = {
+              {
+                line = 14,
+                filename = "/home/issafalcon/repos/learning-dotnet/UnitTesting/XUnitSamples/ClassDataTests.cs",
+                text = "at XUnitSamples.ClassDataTests.Theory_With_Class_Data_Test(Int32 v1, Int32 v2) in /home/issafalcon/repos/learning-dotnet/UnitTesting/XUnitSamples/ClassDataTests.cs:line 14",
+              },
+            },
           },
         },
         short = "XUnitSamples.ClassDataTests.Theory_With_Class_Data_Test:failed",

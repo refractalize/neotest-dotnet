@@ -51,25 +51,73 @@ function M.create_intermediate_results(test_results, test_definitions)
     end
 
     if value._attr.testName ~= nil then
-      local error_info
+      local stack_trace
+      local error_message
       local outcome = outcome_mapper[value._attr.outcome]
       local has_errors = value.Output and value.Output.ErrorInfo or nil
 
       if has_errors and outcome == "failed" then
-        local stackTrace = value.Output.ErrorInfo.StackTrace or ""
-        error_info = value.Output.ErrorInfo.Message .. "\n" .. stackTrace
+        error_message = value.Output.ErrorInfo.Message
+        stack_trace = parse_stack_trace(value.Output.ErrorInfo.StackTrace)
       end
       local intermediate_result = {
         status = string.lower(outcome),
         raw_output = value.Output and value.Output.StdOut or outcome,
         test_name = qualified_test_name,
-        error_info = error_info,
+        error_message = error_message,
+        stack_trace = stack_trace,
       }
       table.insert(intermediate_results, intermediate_result)
     end
   end
 
   return intermediate_results
+end
+
+function parse_stack_trace(stack_trace)
+  if type(stack_trace) == "table" or type(stack_trace) == "nil" then
+    stack_trace = ""
+  end
+
+  local stack_trace_entries = {}
+
+  for error_message in stack_trace:gmatch("[^\n]+") do
+    local _, _, method, location = string.find(error_message, "at%s+(.-)%s+in%s+(.*)")
+
+    if not method then
+      _, _, method, location = string.find(error_message, "at%s+(.*)")
+    end
+
+    if method then
+      if location then
+        local _, _, filename, line, column = string.find(location, "([^() :]+):line (%d+):?(%d*)")
+
+        if filename then
+          local line = line and tonumber(line)
+          local column = column and tonumber(column)
+
+          stack_trace_entries[#stack_trace_entries + 1] = {
+            module = method,
+            filename = filename,
+            line = line,
+            column = column,
+            text = error_message,
+          }
+        end
+      else
+        stack_trace_entries[#stack_trace_entries + 1] = {
+          module = method,
+          text = error_message,
+        }
+      end
+    else
+      stack_trace_entries[#stack_trace_entries + 1] = {
+        text = error_message,
+      }
+    end
+  end
+
+  return stack_trace_entries
 end
 
 ---Converts and adds the results of the test_results list to the neotest_results table.
@@ -113,9 +161,10 @@ function M.convert_intermediate_results(intermediate_results, test_nodes)
           neotest_results[node_data.id].short = node_data.full_name .. ":failed"
         end
 
-        if intermediate_result.error_info then
+        if intermediate_result.error_message then
           table.insert(neotest_results[node_data.id].errors, {
-            message = intermediate_result.test_name .. ": " .. intermediate_result.error_info,
+            message = intermediate_result.test_name .. ": " .. intermediate_result.error_message,
+            stack_trace = intermediate_result.stack_trace,
           })
 
           -- Mark as failed
